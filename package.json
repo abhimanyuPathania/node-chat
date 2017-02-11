@@ -1,0 +1,22 @@
+{
+  "name": "node-chat",
+  "version": "1.0.0",
+  "description": "Chap app built using node and sockets",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/server.js"
+  },
+  "engines": {
+    "node": "6.9.4"
+  },
+  "keywords": [
+    "node",
+    "websockets",
+    "chat"
+  ],
+  "author": "Abhimanyu Pathania",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
+}
