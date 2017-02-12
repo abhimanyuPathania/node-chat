@@ -3,7 +3,7 @@ var socket = io();
 var locationButton = $('#send-location');
 var messageForm = $('#message-form');
 var messageInput = $('[name=message]', messageForm);
-
+var messagesList = $('#messages');
 
 socket.on('connect', function () {
 	console.log('connected to server');
@@ -11,18 +11,25 @@ socket.on('connect', function () {
 
 socket.on('newMessage', function (message) {
 	var formattedTime = moment(message.createdAt).format('h:mm a');
-	var li = $(`<li>${message.from} ${formattedTime}: ${message.text}</li>`);
-	$('#messages').append(li);
+	var template = $('#message-template').html();
+	var html = Mustache.render(template, {
+		text: message.text,
+		from: message.from,
+		createdAt: formattedTime
+	});
+	messagesList.append(html);
+
 });
 
 socket.on('newLocationMessage', function (message) {
 	var formattedTime = moment(message.createdAt).format('h:mm a');
-	var li = $(`
-		<li>${message.from} ${formattedTime}: 
-			<a target="_blank" href=${message.url}>My current location</a>
-		</li>
-	`);
-	$('#messages').append(li);
+	var template = $('#location-message-template').html();
+	var html = Mustache.render(template, {
+		url: message.url,
+		from: message.from,
+		createdAt: formattedTime
+	});
+	messagesList.append(html);
 });
 
 messageForm.on('submit', function(e) {
@@ -52,11 +59,13 @@ locationButton.click(function () {
 
 		// send coordinates to server
 		socket.emit('createLocationMessage', {latitude, longitude});
+		
 		// enable the location button
 		locationButton.prop('disabled', false);
 		locationButton.text('Send location');
 	}, function () {
 		alert('Unable to fetch location');
+		
 		locationButton.prop('disabled', false);
 		locationButton.text('Send location');
 	});
