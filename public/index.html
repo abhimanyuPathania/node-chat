@@ -2,23 +2,30 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Document</title>
+	<title>Node Chat</title>
+	<link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
-<body>
-	<h1>Hello WebSockets</h1>
+<body class="chat">
 	
-	<ol id="messages">
-		
-	</ol>
-
-	<form id="message-form">
-		<input type="text" name="message" placeholder="Message" />
-		<button type="submit">Send</button>
-	</form>
-	
-	<div>
-		<button type="button" id="send-location">Send Location</button>
+	<div class="chat__sidebar">
+		<h3>People</h3>
+		<div id="users"></div>
 	</div>
+	
+	<div class="chat__main">
+		
+		<ol id="messages" class="chat__messages"></ol>
+
+		<div class="chat__footer">
+			<form id="message-form">
+				<input type="text" name="message" placeholder="Message" autofocus="true" autocomplete="off" />
+				<button type="submit">Send</button>
+			</form>
+			<button type="button" id="send-location">Send location</button>
+		</div>
+
+	</div>
+	
 
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="/js/libs/jquery.js"></script>

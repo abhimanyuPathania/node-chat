@@ -22,12 +22,15 @@ io.on('connection', (socket) => {
 	// notify everyone else except the user
 	socket.broadcast.emit('newMessage', generateMessage('Admin', 'A new user has joined chat'));
 
-	socket.on('createMessage', (message) => {
+	socket.on('createMessage', (message, callback) => {
 		console.log('createMessage', message);
 
 		// socket emits event to a single connection
 		// io will emit them to every connection
 		io.emit('newMessage', generateMessage(message.from, message.text));
+
+		// send the acknowledge event to client
+		callback();
 	});
 
 	socket.on('createLocationMessage', (coords) => {

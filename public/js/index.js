@@ -2,6 +2,7 @@
 var socket = io();
 var locationButton = $('#send-location');
 var messageForm = $('#message-form');
+var messageInput = $('[name=message]', messageForm);
 
 
 socket.on('connect', function () {
@@ -29,22 +30,34 @@ messageForm.on('submit', function(e) {
 
 	socket.emit('createMessage', {
 		from: 'User',
-		text: $('[name=message]', messageForm).val()
+		text: messageInput.val()
 	}, function () {
-		// acknowledge callback
+		// acknowledge callback is fired once server recives the emitted event
+
+		// clear the input after server sends back acknowledge event
+		messageInput.val('');
 	});
 });
 
 locationButton.click(function () {
 	if (!navigator.geolocation) {
-		alert('Geolocation not supported by your browser');
+		return alert('Geolocation not supported by your browser');
 	}
+	// disable the location button
+	locationButton.prop('disabled', true);
+	locationButton.text('Sending location...');
 
 	navigator.geolocation.getCurrentPosition(function (position) {
 		var {latitude, longitude}  = position.coords;
 
+		// send coordinates to server
 		socket.emit('createLocationMessage', {latitude, longitude});
+		// enable the location button
+		locationButton.prop('disabled', false);
+		locationButton.text('Send location');
 	}, function () {
 		alert('Unable to fetch location');
+		locationButton.prop('disabled', false);
+		locationButton.text('Send location');
 	});
 });
