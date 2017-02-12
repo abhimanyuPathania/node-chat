@@ -10,15 +10,15 @@ socket.on('connect', function () {
 });
 
 socket.on('newMessage', function (message) {
-	console.log('New Message', message);
-
-	var li = $(`<li>${message.from}: ${message.text}</li>`);
+	var formattedTime = moment(message.createdAt).format('h:mm a');
+	var li = $(`<li>${message.from} ${formattedTime}: ${message.text}</li>`);
 	$('#messages').append(li);
 });
 
 socket.on('newLocationMessage', function (message) {
+	var formattedTime = moment(message.createdAt).format('h:mm a');
 	var li = $(`
-		<li>${message.from}: 
+		<li>${message.from} ${formattedTime}: 
 			<a target="_blank" href=${message.url}>My current location</a>
 		</li>
 	`);
