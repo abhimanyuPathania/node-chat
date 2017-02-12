@@ -4,7 +4,8 @@
   "description": "Chap app built using node and sockets",
   "main": "index.js",
   "scripts": {
-    "start": "node server/server.js"
+    "start": "node server/server.js",
+    "test": "mocha server/**/*.test.js"
   },
   "engines": {
     "node": "6.9.4"
@@ -21,6 +22,7 @@
     "socket.io": "^1.4.8"
   },
   "devDependencies": {
-
+    "expect": "^1.20.2",
+    "mocha": "^3.0.2"
   }
 }
