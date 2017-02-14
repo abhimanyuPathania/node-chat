@@ -22,8 +22,19 @@ function scrollToBottom() {
 	}
 }; 
 
+// 'connect' is a default event emitted from server on connection
 socket.on('connect', function () {
-	console.log('connected to server');
+	var params = $.deparam(window.location.search);
+	socket.emit('join', params, function (err) {
+		if (err) {
+			// display the error to user
+			alert(err);
+			// send them back to the Join page
+			window.location.href = '/'
+		} else {
+			console.log('No error');
+		}
+	});
 });
 
 socket.on('newMessage', function (message) {
@@ -50,6 +61,19 @@ socket.on('newLocationMessage', function (message) {
 	messagesList.append(html);
 	scrollToBottom();
 });
+
+socket.on('updateUserList', function (users) {
+	var ol = $('<ol></ol>');
+	users.forEach(function (name) {
+		var li = $(`<li>${name}</li>`)
+		ol.append(li);
+	});
+
+	$('#users').html(ol);
+});
+
+
+
 
 messageForm.on('submit', function(e) {
 	e.preventDefault();
