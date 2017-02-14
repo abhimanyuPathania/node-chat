@@ -22,19 +22,27 @@ io.on('connection', (socket) => {
 	console.log('New user connected');
 
 	socket.on('createMessage', (message, callback) => {
-		console.log('createMessage', message);
+		var user = users.getUser(socket.id);
 
-		// socket emits event to a single connection
-		// io will emit them to every connection
-		io.emit('newMessage', generateMessage(message.from, message.text));
+		if (user && isRealString(message.text)) {
+			// socket emits event to a single connection
+			// io will emit them to every connection
+			io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
+		}
 
 		// send the acknowledge event to client
 		callback();
 	});
 
 	socket.on('createLocationMessage', (coords) => {
-		// send everyone the location message
-		io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude));
+
+		var user = users.getUser(socket.id);
+
+		if (user) {
+			// socket emits event to a single connection
+			// io will emit them to every connection
+			io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude));
+		}
 	});
 
 	socket.on('join', (params, callback) => {
@@ -48,7 +56,7 @@ io.on('connection', (socket) => {
 		socket.join(params.room);
 
 		// remove user from other rooms
-		// this mean a user can chat only in one room at a time
+		// THIS MEAN A USER CAN CHAT ONLY IN ONE ROOM AT A TIME
 		users.removeUser(socket.id);
 		// add the user back with new room
 		users.addUser(socket.id, params.name, params.room);

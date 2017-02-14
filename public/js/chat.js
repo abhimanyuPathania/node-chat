@@ -79,7 +79,6 @@ messageForm.on('submit', function(e) {
 	e.preventDefault();
 
 	socket.emit('createMessage', {
-		from: 'User',
 		text: messageInput.val()
 	}, function () {
 		// acknowledge callback is fired once server recives the emitted event
