@@ -1,4 +1,6 @@
 
+(function(){
+
 var socket = io();
 var locationButton = $('#send-location');
 var messageForm = $('#message-form');
@@ -112,3 +114,6 @@ locationButton.click(function () {
 		locationButton.text('Send location');
 	});
 });
+
+
+}());
